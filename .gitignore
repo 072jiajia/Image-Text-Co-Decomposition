@@ -1,0 +1,11 @@
+*.pyc
+.vscode
+__pycache__
+output*
+.ipynb_checkpoints
+notebooks
+checkpoints/
+data
+temp
+
+checkpoint

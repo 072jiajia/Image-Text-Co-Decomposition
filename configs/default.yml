@@ -1,0 +1,111 @@
+_base_: "eval.yml"
+
+model:
+  type: ImageTextCoDecomposition
+  clip_model: ViT-B/16  # NOTE only ViT-based backbones are supported.
+  ie_freeze: 11  # index [1 ~ 12]
+  ie_ignore_last_attn: true  # use MaskCLIP
+  masker:
+    type: Masker
+    decoder:
+      type: GDecoder
+      double: false
+      n_layers: 2
+      kernel_size: 3
+      act: gelu
+      norm: ln
+    sim2mask:
+      init_w: 10.0
+      init_b: -2.5
+      gumbel_tau: 1.0
+      learnable: true
+
+  w_kg: 8.0
+
+  use_region_highlighting_prompt: true
+
+  # tcl's loss
+  w_tcl: 0.1
+  pos_area: 0.25
+  w_pos_area: 0.5
+  w_neg_area: 0.05
+
+  # total variation loss (paper's page 5)
+  w_tv: 1.0
+
+  w_hcl: 0.1
+  w_tseg: 1.0
+  use_word_highlighting_prompt: true
+
+data:
+  batch_size: 8
+  pin_memory: false
+  num_workers: 0
+  seed: ${train.seed}
+  dataset:
+    meta:
+      gcc3m:
+        type: img_txt_pair
+        path: ./data/gcc3m/local_data/gcc3m_shards/
+        prefix: "{000000..000331}.tar"
+        length: 3000000
+      gcc12m:
+        type: img_txt_pair
+        path: ./data/gcc12m/local_data/gcc12m_shards/
+        prefix: "{000000..001242}.tar"
+        length: 13000000
+    train:
+      - gcc3m
+      - gcc12m
+
+  img_aug:
+    deit_aug: false
+    img_size: 224
+    img_scale: [0.9, 1.0]
+
+    interpolation: bilinear
+    color_jitter: 0.4
+    auto_augment: 'rand-m9-mstd0.5-inc1'
+    re_prob: 0.25
+    re_mode: 'pixel'
+    re_count: 1
+  text_aug: null
+  num_words: 2
+  word_type: noun
+
+train:
+  start_step: 0
+  total_steps: 50000
+  warmup_steps: 15000
+  ust_steps: 30000
+  base_lr: 3.2e-4
+  weight_decay: 0.05
+  min_lr: 4e-5
+  clip_grad: 5.0
+  fp16: true
+  fp16_comm: true # use fp16 grad compression for multi-node training
+  seed: 0
+
+  lr_scheduler:
+    name: cosine
+
+  optimizer:
+    name: adamw
+    eps: 1e-6
+    betas: [0.9, 0.999]
+
+evaluate:
+  eval_only: false
+  eval_freq: 5000
+
+checkpoint:
+  resume: ''
+  save_topk: 1
+  save_all: false  # if true, save every evaluation step
+
+output: ???
+tag: default
+print_freq: 20
+seed: 0
+method_name: ???
+wandb: false
