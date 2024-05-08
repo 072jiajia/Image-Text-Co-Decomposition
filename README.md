@@ -1,5 +1,5 @@
 # Image-Text Co-Decomposition
-Code for CVPR 2023 Image-Text Co-Decomposition for Text-Supervised Semantic Segmentation
+Code for CVPR 2024 Image-Text Co-Decomposition for Text-Supervised Semantic Segmentation
 
 [Paper](https://arxiv.org/abs/2309.03900)  
 
