@@ -1,7 +1,7 @@
 # Image-Text Co-Decomposition
 Code for CVPR 2024 Image-Text Co-Decomposition for Text-Supervised Semantic Segmentation
 
-[Paper](https://arxiv.org/abs/2309.03900)  
+[Paper](https://openaccess.thecvf.com/content/CVPR2024/papers/Wu_Image-Text_Co-Decomposition_for_Text-Supervised_Semantic_Segmentation_CVPR_2024_paper.pdf)  
 
 ## Notes on environment setup
 
